@@ -1,0 +1,20 @@
+{
+  "name": "ajv-currency",
+  "version": "1.0.0",
+  "description": "A currency validator / parser for ajv with the keyword \"currency\" (and friends)",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "ajv",
+    "currency",
+    "keyword",
+    "parser"
+  ],
+  "author": "Jason Thorpe",
+  "license": "ISC",
+  "dependencies": {
+    "currency-parser": "^1.0.0"
+  }
+}
