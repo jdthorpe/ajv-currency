@@ -1,6 +1,6 @@
 {
   "name": "ajv-currency",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A currency validator / parser for ajv with the keyword \"currency\" (and friends)",
   "main": "index.js",
   "scripts": {
