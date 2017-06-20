@@ -10,9 +10,8 @@ import {
     currency_regex_options
     } from "currency-parser"
 
-//-- const AJV = require('ajv');
-
-export = function add_ajv_Keywords(x:any):void{
+export = function(x:any, // an Ajv Instance
+                  options:currency_regex_options):void{
 
     // ------------------------------
     // string validators
@@ -34,27 +33,43 @@ export = function add_ajv_Keywords(x:any):void{
 
     x.addKeyword('currency', { 
         "type": 'string', 
-        "compile": function (schema:currency_regex_options) {
-            const regex = currency_regex(schema);
+        "compile": function (schema?:currency_regex_options) {
+            var regex:RegExp;
+            if(typeof schema ===  "object"){
+                regex = currency_regex(schema);
+            }else if(options !== undefined){
+                regex = currency_regex(options);
+            }else{
+                regex = english_currency_regex
+            }
             return (data:string) => { return regex.test(data)};
         },
         "metaSchema":{
-            "type":"object",
-            "properties":{
-                "decimal":{
-                    "type":'string',
-                    "minLength":1,
-                },
-                "separator":{
-                    "type":'string',
-                    "minLength":1,
-                },
-                "symbol":{
-                    "type":'string',
-                    "minLength":1,
-                },
-            },
-            required:[ "decimal", "separator", ],
+            "oneOf":[
+                {"type":"boolean"},
+                {
+                    "type": "object",
+                    "properties": {
+                        "decimal": {
+                            "type": 'string',
+                            "minLength": 1,
+                        },
+                        "separator": {
+                            "type": 'string',
+                            "minLength": 1,
+                        },
+                        "symbol": {
+                            "type": 'string',
+                            "minLength": 1,
+                        },
+                    },
+                    "dependencies": {
+                        "decimal": ["separator",],
+                        "separator": ["decimal",],
+                        "symbol": ["decimal",],
+                    }
+                }
+            ],
         },
     });
 
@@ -95,8 +110,15 @@ export = function add_ajv_Keywords(x:any):void{
     x.addKeyword('currency-value', { 
         "modifying": true,
         "type": 'string', 
-        "compile": function (schema:currency_regex_options) {
-            const parser = currency_parser(schema);
+        "compile": function (schema?:currency_regex_options) {
+            var parser:{(x:string):number};
+            if(typeof schema ===  "object"){
+                parser = currency_parser(schema);
+            }else if(options !== undefined){
+                parser = currency_parser(options);
+            }else{
+                parser = english_currency_parser;
+            }
             return (data:string,path:string[],parent:any,key:string) => {  
                 try{
                     parent[key] = parser(data);
@@ -107,22 +129,31 @@ export = function add_ajv_Keywords(x:any):void{
             };
         },
         "metaSchema":{
-            "type":"object",
-            "properties":{
-                "decimal":{
-                    "type":'string',
-                    "minLength":1,
-                },
-                "separator":{
-                    "type":'string',
-                    "minLength":1,
-                },
-                "symbol":{
-                    "type":'string',
-                    "minLength":1,
-                },
-            },
-            "required":[ "decimal", "separator", ],
+            "oneOf":[
+                {"type":"boolean"},
+                {
+                    "type": "object",
+                    "properties": {
+                        "decimal": {
+                            "type": 'string',
+                            "minLength": 1,
+                        },
+                        "separator": {
+                            "type": 'string',
+                            "minLength": 1,
+                        },
+                        "symbol": {
+                            "type": 'string',
+                            "minLength": 1,
+                        },
+                    },
+                    "dependencies": {
+                        "decimal": ["separator",],
+                        "separator": ["decimal",],
+                        "symbol": ["decimal",],
+                    }
+                }
+            ],
         },
     });
 

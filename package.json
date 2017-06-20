@@ -4,7 +4,8 @@
   "description": "A currency validator / parser for ajv with the keyword \"currency\" (and friends)",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "webpack": "./node_modules/.bin/webpack --config webpack.config.js"
   },
   "keywords": [
     "ajv",
@@ -16,5 +17,9 @@
   "license": "ISC",
   "dependencies": {
     "currency-parser": "^1.0.0"
+  },
+  "devDependencies": {
+    "ajv": "^5.2.0",
+    "webpack": "^3.0.0"
   }
 }
