@@ -101,7 +101,7 @@ module.exports = function (x, // an Ajv Instance
         "type": 'string',
         "compile": function (schema) {
             var regex;
-            if (schema !== undefined) {
+            if (typeof schema === "object") {
                 regex = currency_parser_1.currency_regex(schema);
             }
             else if (options !== undefined) {
@@ -113,26 +113,31 @@ module.exports = function (x, // an Ajv Instance
             return function (data) { return regex.test(data); };
         },
         "metaSchema": {
-            "type": "object",
-            "properties": {
-                "decimal": {
-                    "type": 'string',
-                    "minLength": 1,
-                },
-                "separator": {
-                    "type": 'string',
-                    "minLength": 1,
-                },
-                "symbol": {
-                    "type": 'string',
-                    "minLength": 1,
-                },
-            },
-            "dependencies": {
-                "decimal": ["separator",],
-                "separator": ["decimal",],
-                "symbol": ["decimal",],
-            }
+            "oneOf": [
+                { "type": "boolean" },
+                {
+                    "type": "object",
+                    "properties": {
+                        "decimal": {
+                            "type": 'string',
+                            "minLength": 1,
+                        },
+                        "separator": {
+                            "type": 'string',
+                            "minLength": 1,
+                        },
+                        "symbol": {
+                            "type": 'string',
+                            "minLength": 1,
+                        },
+                    },
+                    "dependencies": {
+                        "decimal": ["separator",],
+                        "separator": ["decimal",],
+                        "symbol": ["decimal",],
+                    }
+                }
+            ],
         },
     });
     // ------------------------------
@@ -173,7 +178,7 @@ module.exports = function (x, // an Ajv Instance
         "type": 'string',
         "compile": function (schema) {
             var parser;
-            if (schema !== undefined) {
+            if (typeof schema === "object") {
                 parser = currency_parser_1.currency_parser(schema);
             }
             else if (options !== undefined) {
@@ -193,22 +198,31 @@ module.exports = function (x, // an Ajv Instance
             };
         },
         "metaSchema": {
-            "type": "object",
-            "properties": {
-                "decimal": {
-                    "type": 'string',
-                    "minLength": 1,
-                },
-                "separator": {
-                    "type": 'string',
-                    "minLength": 1,
-                },
-                "symbol": {
-                    "type": 'string',
-                    "minLength": 1,
-                },
-            },
-            "required": ["decimal", "separator",],
+            "oneOf": [
+                { "type": "boolean" },
+                {
+                    "type": "object",
+                    "properties": {
+                        "decimal": {
+                            "type": 'string',
+                            "minLength": 1,
+                        },
+                        "separator": {
+                            "type": 'string',
+                            "minLength": 1,
+                        },
+                        "symbol": {
+                            "type": 'string',
+                            "minLength": 1,
+                        },
+                    },
+                    "dependencies": {
+                        "decimal": ["separator",],
+                        "separator": ["decimal",],
+                        "symbol": ["decimal",],
+                    }
+                }
+            ],
         },
     });
 };
